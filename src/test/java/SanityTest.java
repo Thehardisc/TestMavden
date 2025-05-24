@@ -6,7 +6,6 @@ import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-
 public class SanityTest {
     private WebDriver driver;
     private PetStoreMain petStore;
@@ -16,29 +15,38 @@ public class SanityTest {
     public void setUp() {
         this.driver = new ChromeDriver();
         this.driver.manage().window().maximize();
-        this.petStore = new PetStoreMain(driver);
+        this.petStore = new PetStoreMain(this.driver);
+        this.config = Config.getInstance();
     }
 
     @Test
     public void sanityTest() {
-        String user = UserRandomizer.getInstance().generateUsername();
-        this.config = Config.getInstance();
-
+        UserRandomizer randomizer = UserRandomizer.getInstance();
+        String user = randomizer.generateUsername();
+        String staticPassword = this.config.getStaticPassword();
         this.petStore
                 .open()
                 .register()
-                .registerUser(user,this.config.getStaticPassword())
-                .loginUser(user,this.config.getStaticPassword())
+                .registerUser(user, staticPassword)
+                .loginUser(user, staticPassword)
+                .goToFishCategory()
+                .selectRandomProduct()
+                .clickRandomAddToCart()
+                .verifyCartHasItems()
+                .proceedToCheckout()
+                .verifyOnCheckoutPage()
+                .continueToOrderConfirmation()
+                .confirmOrder()
+                .verifyOrderSuccess()
                 .editProfile()
                 .changePassword()
                 .logoff()
                 .login()
-                .loginUser(user,UserRandomizer.getInstance().getGeneratedPassword());
+                .loginUser(user, randomizer.getGeneratedPassword());
     }
 
     @After
     public void tearDown() {
         System.out.println("The Sanity test Finished!");
     }
-
 }

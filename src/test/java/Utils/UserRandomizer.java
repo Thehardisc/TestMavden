@@ -5,6 +5,7 @@ import java.util.Random;
 public class UserRandomizer {
     private static UserRandomizer instance;
     private String generatedPassword;
+
     private UserRandomizer() {}
 
     public String generateUsername() {

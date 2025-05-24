@@ -1,21 +1,16 @@
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.junit.Assert;
 
 public class OrderConfirmationPage extends PetStoreMain {
+
     public OrderConfirmationPage(WebDriver driver) {
         super(driver);
     }
 
-    // בודק שההזמנה הושלמה בהצלחה לפי טקסט בדף
-    public void verifyOrderSuccess() {
-        String pageSource = driver.getPageSource().toLowerCase();
-
-        // בדיקת הופעת טקסט שמסמל הצלחה
-        boolean containsThankYou = pageSource.contains("thank you");
-        boolean containsOrderNumber = pageSource.contains("order") && pageSource.matches(".*order.*#?\\d+.*");
-
-        Assert.assertTrue("Order confirmation not detected on page",
-                containsThankYou || containsOrderNumber);
+    public OrderConfirmationPage verifyOrderSuccess() {
+        assertPages.assertHTML(
+                "//p[normalize-space(text())='Thank you, your order has been submitted.']",
+                "Order submission confirmation not displayed"
+        );
+        return this;
     }
 }

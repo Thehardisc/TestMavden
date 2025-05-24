@@ -1,9 +1,7 @@
 import Utils.AssertPages;
 import Utils.Config;
-import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-
 
 public class PetStoreMain {
     protected final WebDriver driver;
@@ -21,39 +19,44 @@ public class PetStoreMain {
         return this;
     }
 
+    public ProductSelectorPage goToFishCategory() {
+        this.driver.findElement(By.cssSelector("a[href='/categories/FISH']")).click();
+        assertPages.assertPages(
+                "/categories/FISH",
+                "Fish category page not loaded"
+        );
+        return new ProductSelectorPage(this.driver);
+    }
+
     public PetRegisterPage register() {
-        driver.findElement(By.cssSelector("a[href='/account/newAccountForm']"))
-                .click();
+        this.driver.findElement(By.cssSelector("a[href='/account/newAccountForm']")).click();
         assertPages.assertPages(
                 config.getRegisterUri(),
                 "The Register button has failed to move you to the register page"
         );
-        return new PetRegisterPage(driver);
+        return new PetRegisterPage(this.driver);
     }
 
     public PetEditAccount editProfile() {
-        driver.findElement(By.cssSelector("a[href='/account/editAccountForm']"))
-                .click();
+        this.driver.findElement(By.cssSelector("a[href='/account/editAccountForm']")).click();
         assertPages.assertPages(
                 config.getEditAccountUri(),
                 "The Edit Profile button has failed to move you to the edit Account page"
         );
-        return new PetEditAccount(driver);
+        return new PetEditAccount(this.driver);
     }
 
     public PetLoginPage login() {
-        driver.findElement(By.cssSelector("a[href='/account/signonForm']"))
-                .click();
+        this.driver.findElement(By.cssSelector("a[href='/account/signonForm']")).click();
         assertPages.assertPages(
                 config.getLoginUrl(),
                 "The login redirection failed!"
         );
-        return new PetLoginPage(driver);
+        return new PetLoginPage(this.driver);
     }
 
     public PetStoreMain logoff() {
-        driver.findElement(By.cssSelector("a[href='/account/signoff']"))
-                .click();
+        this.driver.findElement(By.cssSelector("a[href='/account/signoff']")).click();
         assertPages.assertPages(
                 "/",
                 "The logoff failed!"

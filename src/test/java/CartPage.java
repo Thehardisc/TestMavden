@@ -1,8 +1,10 @@
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import java.util.List;
-import java.util.Random;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class CartPage extends PetStoreMain {
 
@@ -10,43 +12,29 @@ public class CartPage extends PetStoreMain {
         super(driver);
     }
 
-    /**
-     * Verify cart has at least one item and update quantity
-     */
     public CartPage verifyCartHasItems() {
-        List<WebElement> items =
-                driver.findElements(By.cssSelector("#Cart input[type='number']"));
-        if (items.isEmpty()) {
-            throw new AssertionError("Cart is empty");
-        }
-        // update a random item's quantity
-        WebElement selectedInput =
-                items.get(new Random().nextInt(items.size()));
-        int newQuantity = new Random().nextInt(5) + 1;
-        selectedInput.clear();
-        selectedInput.sendKeys(String.valueOf(newQuantity));
+        assertPages.assertText("#Cart", "Cart table did not appear on the page");
 
-        WebElement updatedInput =
-                driver.findElement(By.name(selectedInput.getAttribute("name")));
-        int updatedQuantity =
-                Integer.parseInt(updatedInput.getAttribute("value"));
-        if (updatedQuantity != newQuantity) {
-            throw new AssertionError("Quantity did not update correctly");
+        int totalRows = driver
+                .findElement(By.cssSelector("#Cart"))
+                .findElements(By.cssSelector("tr"))
+                .size();
+        int itemCount = totalRows - 1;
+
+        if (itemCount < 1) {
+            Assert.fail("Cart is empty; expected at least one item but found " + itemCount);
         }
+
         return this;
     }
 
-    /**
-     * Proceed to checkout and verify URL
-     */
     public CheckoutPage proceedToCheckout() {
-        driver.findElement(
-                By.cssSelector("a.button[href='/order/newOrderForm']")
-        ).click();
+        assertPages.assertText("a[href='/order/newOrderForm']", "Didn't found the checkout button");
+        driver.findElement(By.cssSelector("a[href='/order/newOrderForm']")).click();
         assertPages.assertPages(
                 "/order/newOrderForm",
-                "Failed to navigate to checkout page"
+                "Did not navigate to checkout page"
         );
-        return new CheckoutPage(driver);
+        return new CheckoutPage(this.driver);
     }
 }

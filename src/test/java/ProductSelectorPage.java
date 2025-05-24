@@ -1,6 +1,10 @@
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 import java.util.List;
 import java.util.Random;
 
@@ -10,23 +14,21 @@ public class ProductSelectorPage extends PetStoreMain {
         super(driver);
     }
 
-    /**
-     * Select a random product and verify navigation
-     */
-    public ProductSelectorPage selectRandomProduct() {
-        List<WebElement> productLinks =
-                driver.findElements(By.cssSelector("#Catalog table a"));
-        WebElement selectedLink =
-                productLinks.get(new Random().nextInt(productLinks.size()));
+    public AddToCartPage selectRandomProduct() {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("#Catalog")));
+        List<WebElement> productLinks = this.driver.findElements(By.cssSelector("#Catalog a[href*='/products/']"));
+        if (productLinks.isEmpty()) {
+            Assert.fail("No products found");
+        }
+        WebElement selectedLink = productLinks.get(new Random().nextInt(productLinks.size()));
         String expectedHref = selectedLink.getAttribute("href");
-
         selectedLink.click();
-        // extract relative URI
         String uri = expectedHref.replace(config.getWebSiteUrl(), "");
         assertPages.assertPages(
                 uri,
                 "Failed to navigate to product page"
         );
-        return this;
+        return new AddToCartPage(this.driver);
     }
 }

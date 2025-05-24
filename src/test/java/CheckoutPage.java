@@ -1,5 +1,10 @@
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class CheckoutPage extends PetStoreMain {
 
@@ -7,28 +12,16 @@ public class CheckoutPage extends PetStoreMain {
         super(driver);
     }
 
-    /**
-     * Verify on checkout form page
-     */
     public CheckoutPage verifyOnCheckoutPage() {
-        assertPages.assertPages(
-                "/order/newOrderForm",
-                "Not on the checkout form page"
-        );
+        assertPages.assertPages("/order/newOrderForm", "Not on the checkout form page");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("form[action*='newOrder']")));
         return this;
     }
 
-    /**
-     * Submit the order form and verify confirmation step
-     */
-    public OrderConfirmationPage continueToOrderConfirmation() {
-        driver.findElement(By.cssSelector("button[type='submit']"))
-                .click();
-        assertPages.assertHTML(
-                "//h1[contains(normalize-space(.),'Thank You') or " +
-                        "contains(normalize-space(.),'Order Confirmation')]",
-                "Did not proceed to final order step"
-        );
-        return new OrderConfirmationPage(driver);
+    public ConfirmationPage continueToOrderConfirmation() {
+        this.driver.findElement(By.xpath("//button[@type='submit' and normalize-space(text())='Continue']")).click();
+        assertPages.assertPages("/order/newOrder", "Not on the checkout form page");
+        return new ConfirmationPage(this.driver);
     }
 }

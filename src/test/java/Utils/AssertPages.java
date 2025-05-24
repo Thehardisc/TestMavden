@@ -32,7 +32,6 @@ public class AssertPages {
                     .withTimeout(Duration.ofSeconds(15))
                     .pollingEvery(Duration.ofSeconds(2))
                     .until(d -> d.findElement(By.xpath(value)).isDisplayed());
-
         } catch (Exception e) {
             Assert.fail(errorMessage);
         }

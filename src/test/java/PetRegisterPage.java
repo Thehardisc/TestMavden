@@ -32,9 +32,7 @@ public class PetRegisterPage extends PetStoreMain {
         this.driver.findElement(By.name("bannerOption")).click();
 
         this.driver.findElement(By.xpath("//button[normalize-space(.)='Save Account Information']")).click();
-        this.assertPages.assertPages(this.config.getLoginUriAfterRegister(),"Something went Wrong in the registeration");
+        this.assertPages.assertPages(this.config.getLoginUriAfterRegister(), "Something went Wrong in the registration");
         return new PetLoginPage(this.driver);
-
     }
-
 }

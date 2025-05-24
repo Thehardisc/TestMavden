@@ -10,19 +10,18 @@ public class AddToCartPage extends PetStoreMain {
         super(driver);
     }
 
-    /**
-     * Click a random "Add to Cart" button and verify navigation
-     */
     public CartPage clickRandomAddToCart() {
-        List<WebElement> buttons =
-                driver.findElements(By.cssSelector("a.button[href*='/cart']"));
-        WebElement randomButton =
-                buttons.get(new Random().nextInt(buttons.size()));
+        assertPages.assertText("a.button[href*='addItemToCart']","The list is empty");
+        List<WebElement> buttons = this.driver.findElements(By.cssSelector("a.button[href*='addItemToCart']"));
+        if (buttons.isEmpty()) {
+            throw new RuntimeException("No 'Add to Cart' buttons found on the product page!");
+        }
+        WebElement randomButton = buttons.get(new Random().nextInt(buttons.size()));
         randomButton.click();
         assertPages.assertPages(
                 "/cart",
                 "Did not navigate to cart after adding item"
         );
-        return new CartPage(driver);
+        return new CartPage(this.driver);
     }
 }
