@@ -47,6 +47,7 @@ public class SanityTest {
 
     @After
     public void tearDown() {
+        this.driver.quit();
         System.out.println("The Sanity test Finished!");
     }
 }
