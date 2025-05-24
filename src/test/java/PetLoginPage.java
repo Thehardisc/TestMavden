@@ -1,9 +1,6 @@
-import Utils.Config;
-import org.junit.Assert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.FluentWait;
 
 public class PetLoginPage extends PetStoreMain {
 
@@ -19,7 +16,7 @@ public class PetLoginPage extends PetStoreMain {
         usernameField.sendKeys(user);
         passwordField.sendKeys(password);
         this.driver.findElement(By.xpath("//button[normalize-space(.)='Login']")).click();
-        assertPages.assertPages("/","The login failed!");
-        return this;
+        assertPages.assertPages("/", "The login failed!");
+        return new PetStoreMain(this.driver);
     }
 }

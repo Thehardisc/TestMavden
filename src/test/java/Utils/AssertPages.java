@@ -2,7 +2,9 @@ package Utils;
 
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.FluentWait;
 
 import java.time.Duration;
@@ -31,9 +33,22 @@ public class AssertPages {
             new FluentWait<>(this.driver)
                     .withTimeout(Duration.ofSeconds(15))
                     .pollingEvery(Duration.ofSeconds(2))
+                    .ignoring(NoSuchElementException.class)
                     .until(d -> d.findElement(By.xpath(value)).isDisplayed());
         } catch (Exception e) {
-            Assert.fail(errorMessage);
+            Assert.fail(errorMessage + " " + e.getMessage());
+        }
+    }
+
+    public void assertText(String value, String errorMessage) {
+        try {
+            new FluentWait<>(this.driver)
+                    .withTimeout(Duration.ofSeconds(15))
+                    .pollingEvery(Duration.ofSeconds(2))
+                    .ignoring(org.openqa.selenium.NoSuchElementException.class)
+                    .until(d -> d.findElement(By.cssSelector(value)));
+        } catch (Exception e) {
+            Assert.fail(errorMessage + " " + e.getMessage());
         }
     }
 }

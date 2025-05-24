@@ -19,7 +19,7 @@ public class AddToCartPage extends PetStoreMain {
         WebElement randomButton = buttons.get(new Random().nextInt(buttons.size()));
         randomButton.click();
         assertPages.assertPages(
-                "/cart",
+                "/cart/viewCart",
                 "Did not navigate to cart after adding item"
         );
         return new CartPage(this.driver);
